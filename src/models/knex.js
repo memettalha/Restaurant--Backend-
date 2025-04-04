@@ -1,5 +1,5 @@
 import knex from 'knex'
-import knexfile from '../../knexfile'
+import knexfile from '../../knexfile.js'
 
 const env = 'development'
 const config = knexfile[env]

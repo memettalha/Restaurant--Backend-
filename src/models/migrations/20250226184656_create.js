@@ -2,14 +2,15 @@
  * @param { import("knex").Knex } knex
  * @returns { Promise<void> }
  */
-exports.up = function(knex) {
-  
-};
+
+export async function up(knex) {
+    // Migration işlemleri buraya gelecek
+}
 
 /**
  * @param { import("knex").Knex } knex
  * @returns { Promise<void> }
  */
-exports.down = function(knex) {
-  
-};
+export async function down(knex) {
+    // Rollback işlemleri buraya gelecek
+}

@@ -1,17 +1,38 @@
-import knex from "./knex";
+import knex from "./knex.js";
+import { SHOW_DELETED } from '../constant.js';
 
 export const Product = {
-    getAll : () => {
-        return knex('products').whereNull('deleted_at')
+    getAll: (query) => {
+        let queryBuilder = knex('products');
+        
+        // Kategori filtresi
+        if (query.category) {
+            queryBuilder = queryBuilder.where('category_id', query.category);
+        }
+        
+        // Silinen kayıtlar filtresi
+        if (query.show_deleted === SHOW_DELETED.TRUE) {
+            // Tüm kayıtları getir
+        } else if (query.show_deleted === SHOW_DELETED.ONLY_DELETED) {
+            queryBuilder = queryBuilder.whereNotNull('deleted_at');
+        } else {
+            queryBuilder = queryBuilder.whereNull('deleted_at');
+        }
+        
+        return queryBuilder;
     },
-    getById: ({id}) => {
-        return knex('products').whereNull('deleted_at').where({id})
+    getById: (id) => {
+        return knex('products').whereNull('deleted_at').where({id}).first();
     },
-    update: ({id,product}) => {
-        product.updated_at = new Date()
-        return knex('products').whereNull('deleted_At').where({id}).update(product)
+    create: (product) => {
+        product.created_at = new Date();
+        return knex('products').insert(product);
     },
-    delete:({id}) => {
-        return knex('products').where({id}).update({deleted_at:knex.fn.now()})
+    update: (id, product) => {
+        product.updated_at = new Date();
+        return knex('products').where({id}).update(product);
+    },
+    delete: (id) => {
+        return knex('products').where({id}).update({deleted_at: knex.fn.now()});
     }
-}
+};
